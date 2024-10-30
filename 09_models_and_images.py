@@ -1,11 +1,12 @@
 import math
 import os
 import sys
-
+import pywavefront
+import numpy as np
 import glm
 import moderngl
 import pygame
-from objloader import Obj
+#from objloader import Obj
 from PIL import Image
 
 os.environ['SDL_WINDOWS_DPI_AWARENESS'] = 'permonitorv2'
@@ -30,11 +31,19 @@ class ModelGeometry:
     def __init__(self, path):
         self.ctx = moderngl.get_context()
 
-        obj = Obj.open(path)
-        self.vbo = self.ctx.buffer(obj.pack('vx vy vz nx ny nz tx ty'))
+        obj = pywavefront.Wavefront(path, collect_faces=True)
+        
+        vertices = []
+        for name, mesh in obj.meshes.items():
+            for face in mesh.faces:
+                for vertex_index in face:
+                    vertices.extend(obj.vertices[vertex_index])
+
+  
+        self.vbo = self.ctx.buffer(np.array(vertices, dtype='f4').tobytes())
 
     def vertex_array(self, program):
-        return self.ctx.vertex_array(program, [(self.vbo, '3f 12x 2f', 'in_vertex', 'in_uv')])
+        return self.ctx.vertex_array(program, [(self.vbo, '3f', 'in_vertex')])
 
 
 class Mesh:
@@ -106,13 +115,16 @@ class Scene:
             ''',
         )
 
-        self.texture = ImageTexture('examples/data/textures/crate.png')
+        
+        self.texture =ImageTexture('logo.png')
 
-        self.car_geometry = ModelGeometry('examples/data/models/lowpoly_toy_car.obj')
+     
+        self.car_geometry = ModelGeometry('auto2.obj')
+
         self.car = Mesh(self.program, self.car_geometry)
 
-        self.crate_geometry = ModelGeometry('examples/data/models/crate.obj')
-        self.crate = Mesh(self.program, self.crate_geometry, self.texture)
+        #self.crate_geometry = ModelGeometry('examples/data/models/crate.obj')
+       # self.crate = Mesh(self.program, self.crate_geometry, self.texture)
 
     def camera_matrix(self):
         now = pygame.time.get_ticks() / 1000.0
@@ -129,9 +141,10 @@ class Scene:
 
         self.program['camera'].write(camera)
 
-        self.car.render((-0.4, 0.0, 0.0), (1.0, 0.0, 0.0), 0.2)
-        self.crate.render((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 0.2)
-        self.car.render((0.4, 0.0, 0.0), (0.0, 0.0, 1.0), 0.2)
+       # self.car.render((-0.4, 0.0, 0.0), (1.0, 0.0, 0.0), 0.2)
+       # self.crate.render((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 0.2)
+        #self.car.render((0.4, 0.0, 0.0), (0.0, 0.0, 1.0), 0.2)
+        self.car.render((0.0, 0.0, -2.0), (1.0, 0.0, 0.0), 0.1)
 
 
 scene = Scene()
