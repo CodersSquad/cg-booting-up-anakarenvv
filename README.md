@@ -21,13 +21,29 @@ This lab stands to prepare the moderngl development environment. Below the steps
 ## How to run your program
 
 ```
-# Update this section with instructions on how to run your programs. 
+# CG Booting Up - Anakarenvv
 
-# Consider that these instructions will be executed 
-in a completely new linux-based machine (Ubuntu 22.04),
-so, instructions for dependencies installation must be added.
+## Technologies Used
 
-# It's highly recommended to use python virtual envs. 
+- **Python 3.12.2**
+- **Pygame**: For creating the game window and handling user input.
+- **ModernGL**: For rendering 3D graphics using OpenGL.
+- **PyWavefront**: For loading OBJ files and their associated materials.
+- **Pillow**: For handling image loading and manipulation.
+
+## Project Structure
+CG-BOOTING-UP-ANAKAREN │ ├── 01_hello_world.py ├── 06_multiple_objects.py ├── 09_models_and_images.py ├── auto.obj ├── logo.png ├── material.lib └── README.md
+
+
+1. install the requirmente packages:
+    pip install pygame moderngl pywavefront Pillow numpy glm
+
+Note: Ensure that the OBJ files and texture images are in the same directory as the Python scripts.
+
+- If you encounter any errors related to missing files, ensure that the paths to your OBJ files and texture images are correct.
+- Make sure you have all the necessary dependencies installed.
+- If the model appears incorrectly, check the OBJ file for any unsupported statements or materials.
+
 You may take a look on:
 https://docs.python.org/3/library/venv.html
 ```
